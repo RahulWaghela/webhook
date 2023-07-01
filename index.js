@@ -47,6 +47,7 @@ app.post('/webhook', (req, res) => {
                     }
                 },
                 headers: {
+                    "Authorization":`Bearer ${process.env.TOKEN}`,
                     "Content-Type": "application/json"
                 }
             });
