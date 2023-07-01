@@ -43,7 +43,7 @@ app.post('/webhook', (req, res) => {
                     "messaging_product": "whatsapp",
                     to: from,
                     text: {
-                        body: "Hi.. from other side"
+                        body: "Hello.. from other side"
                     }
                 },
                 headers: {
