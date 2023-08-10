@@ -35,7 +35,18 @@ app.post('/webhook', (req, res) => {
             let phon_no_id = body_param.entry[0].changes[0].value.metadata.phone_number_id;
             let from = body_param.entry[0].changes[0].value.message[0].from;
             let msg_body = body_param.entry[0].changes[0].value.message[0].text.body;
-
+            //add for testing only
+            const Data = JSON.stringify({
+                messaging_product: 'whatsapp',
+                recipient_type: 'individual',
+                to: 9157808228,
+                type: 'text',
+                text: {
+                  preview_url: false,
+                  body: Replay,
+                },
+              });
+            //   add for testing only   
             axios({
                 method: 'POST',
                 url: "https://graph.facebook.com/v17.0/" + phon_no_id + "/messages?access_token=" + token,
@@ -44,12 +55,13 @@ app.post('/webhook', (req, res) => {
                     to: from,
                     text: {
                         body: "Hello.. from other side"
-                    }
+                    },
                 },
                 headers: {
                     "Authorization":`Bearer ${process.env.TOKEN}`,
                     "Content-Type": "application/json"
-                }
+                },
+                data:Data
             });
             res.send(200);
         } else {
