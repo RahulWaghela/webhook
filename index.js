@@ -1,43 +1,74 @@
-// verfiy the web hok
-my_token = process.env.MYTOKEN
-server.get('/webhooks',  (req, res) => {
-    console.log(req);
-    if (
-        req.query['hub.mode'] == 'subscribe' &&
-        req.query['hub.verify_token'] == token
-    ) {
-        res.send(req.query['hub.challenge']);
-    } else {
-        res.sendStatus(400);
+const { default: axios } = require('axios');
+const bodyParser = require('body-parser');
+const express = require('express');
+const app = express().use(bodyParser.json());
+require('dotenv').config();
+const port=process.env.PORT || 6545;
+const token = process.env.TOKEN;
+const mytoken = process.env.MYTOKEN;
+
+app.get('/webhook', (req, res) => {
+    let mode = req.query['hub.mode'];
+    let challenge = req.query['hub.challenge'];
+    let token = req.query['hub.verify_token'];
+    if (mode && token) {
+        if (mode === 'subscribe' && token === mytoken) {
+            res.status(200).send(challenge);
+        } else {
+            res.status(403);
+        }
     }
 });
 
-// Accepts POST requests at /webhook endpoint
-app.post("/webhook", (req, res) => {
-    
-  // Parse the request body from the POST
-  let body = req.body;
+app.post('/webhook', (req, res) => {
+    let body_param = req.body;
+    console.log(JSON.stringify(body_param, null, 2));
+    if (body_param.object) {
+        if (body_param.entry &&
+            body_param.entry[0].changes &&
+            body_param.entry[0].changes.value.message &&
+            body_param.entry[0].changes[0].value.message[0]) {
 
-  // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
-  if (req.body.object) {
-    if (
-      req.body.entry &&
-      req.body.entry[0].changes &&
-      req.body.entry[0].changes[0] &&
-      req.body.entry[0].changes[0].value.messages &&
-      req.body.entry[0].changes[0].value.messages[0]
-    ) {
-
-      // do your stuff here.....
-
-      let phone_number_id =122096081696009398
-        req.body.entry[0].changes[0].value.metadata.phone_number_id;
-      let from = req.body.entry[0].changes[0].value.messages[0].from; // extract the phone number from the webhook payload
-      let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
+            let phon_no_id = body_param.entry[0].changes[0].value.metadata.phone_number_id;
+            let from = body_param.entry[0].changes[0].value.message[0].from;
+            let msg_body = body_param.entry[0].changes[0].value.message[0].text.body;
+            // add for testing only
+            const data = JSON.stringify({
+                messaging_product: 'whatsapp',
+                recipient_type: 'individual',
+                to: 9726629466,
+                type: 'text',
+                text: {
+                  preview_url: false,
+                  body: Replay,
+                },
+              });
+            //   add for testing only   
+            axios({
+                method: 'POST',
+                url: "https://graph.facebook.com/v17.0/" + phon_no_id + "/messages?access_token=" + token,
+                data: {
+                    "messaging_product": "whatsapp",
+                    to: from,
+                    text: {
+                        body: "Hello.. from other side"
+                    },
+                },
+                headers: {
+                    "Authorization":`Bearer ${process.env.TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                data:data
+            });
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(404); 
+        }
     }
-    res.sendStatus(200);
-  } else {
-    // Return a '404 Not Found' if event is not from a WhatsApp API
-    res.sendStatus(404);
-  }
 });
+app.get('/',(req,res)=>{
+    res.status(200).send('webhook running..')
+})
+app.listen(port,()=>{
+    console.log(`Webhook is Running at http://localhost:${port}`);
+})
