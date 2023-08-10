@@ -39,7 +39,7 @@ app.post('/webhook', (req, res) => {
             const Data = JSON.stringify({
                 messaging_product: 'whatsapp',
                 recipient_type: 'individual',
-                to: 9157808228,
+                to: 9726629466,
                 type: 'text',
                 text: {
                   preview_url: false,
