@@ -10,7 +10,7 @@ const mytoken = process.env.MYTOKEN;
 app.get('/webhook', (req, res) => {
     let mode = req.query['hub.mode'];
     let challenge = req.query['hub.challenge'];
-    let token = req.query['hub.verify_token'];
+    let mytoken = req.query['hub.verify_token'];
     
     if (mode && token) {
         if (mode === 'subscribe' && token === mytoken) {
@@ -39,7 +39,7 @@ app.post('/webhook', (req, res) => {
             const Data = JSON.stringify({
                 messaging_product: 'whatsapp',
                 recipient_type: 'individual',
-                to: 9157808228,
+                to: from,
                 type: 'text',
                 text: {
                   preview_url: false,
