@@ -36,36 +36,37 @@ app.post('/webhook', (req, res) => {
             let from = body_param.entry[0].changes[0].value.message[0].from;
             let msg_body = body_param.entry[0].changes[0].value.message[0].text.body;
             //add for testing only
-            const Data = JSON.stringify({
-                messaging_product: 'whatsapp',
-                recipient_type: 'individual',
-                to: 9726629466,
-                type: 'text',
-                text: {
-                  preview_url: false,
-                  body: Replay,
-                },
-              });
+            // const Data = JSON.stringify({
+            //     messaging_product: 'whatsapp',
+            //     recipient_type: 'individual',
+            //     to: 9726629466,
+            //     type: 'text',
+            //     text: {
+            //       preview_url: false,
+            //       body: Replay,
+            //     },
+            //   });
             //   add for testing only   
-            axios({
-                method: 'POST',
-                url: "https://graph.facebook.com/v17.0/" + phon_no_id + "/messages?access_token=" + token,
-                data: {
-                    "messaging_product": "whatsapp",
-                    to: from,
-                    text: {
-                        body: "Hello.. from other side"
-                    },
-                },
-                headers: {
-                    "Authorization":`Bearer ${process.env.TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                data:Data
-            });
-            res.send(200);
-        } else {
-            res.send(404);
+        //     axios({
+        //         method: 'POST',
+        //         url: "https://graph.facebook.com/v17.0/" + phon_no_id + "/messages?access_token=" + token,
+        //         data: {
+        //             "messaging_product": "whatsapp",
+        //             to: from,
+        //             text: {
+        //                 body: "Hello.. from other side"
+        //             },
+        //         },
+        //         headers: {
+        //             "Authorization":`Bearer ${process.env.TOKEN}`,
+        //             "Content-Type": "application/json"
+        //         },
+        //         data:Data
+        //     });
+        //     res.send(200);
+        // } else {
+        //     res.send(404); }
+
         }
     }
 });
