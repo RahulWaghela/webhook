@@ -10,7 +10,7 @@ const mytoken = process.env.MYTOKEN;
 app.get('/webhook', (req, res) => {
     let mode = req.query['hub.mode'];
     let challenge = req.query['hub.challenge'];
-    let mytoken = req.query['hub.verify_token'];
+    let token = req.query['hub.verify_token'];
     
     if (mode && token) {
         if (mode === 'subscribe' && token === mytoken) {
@@ -29,23 +29,23 @@ app.post('/webhook', (req, res) => {
     if (body_param.object) {
         if (body_param.entry &&
             body_param.entry[0].changes &&
-            body_param.entry[0].changes.value.messages &&
+            body_param.entry[0].changes[0].value.messages &&
             body_param.entry[0].changes[0].value.messages[0]) {
 
             let phon_no_id = body_param.entry[0].changes[0].value.metadata.phone_number_id;
             let from = body_param.entry[0].changes[0].value.messages[0].from;
             let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
             //add for testing only
-            const Data = JSON.stringify({
-                messaging_product: 'whatsapp',
-                recipient_type: 'individual',
-                to: from,
-                type: 'text',
-                text: {
-                  preview_url: false,
-                  body: msg_body,
-                },
-              });
+            // const Data = JSON.stringify({
+            //     messaging_product: 'whatsapp',
+            //     recipient_type: 'individual',
+            //     to: from,
+            //     type: 'text',
+            //     text: {
+            //       preview_url: false,
+            //       body: msg_body,
+            //     },
+            //   });
             //   add for testing only   
             axios({
                 method: 'POST',
