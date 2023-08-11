@@ -43,7 +43,7 @@ app.post('/webhook', (req, res) => {
                 type: 'text',
                 text: {
                   preview_url: false,
-                  body: Replay,
+                  body: msg_body,
                 },
               });
             //   add for testing only   
