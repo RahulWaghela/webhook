@@ -211,5 +211,5 @@ app.post('/webhook', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log('webhook is listening on srver')
+  console.log(`webhook is listening on server`)
 })
